@@ -1,22 +1,22 @@
-import { equipmentMocks, formatPeriod } from '../../../features/equipment'
-import { eventMocks } from '../../../features/events'
-import type { RequestDraftData, StudentRequest } from '../../../features/requests'
+import { useState } from 'react'
+import { formatPeriod } from '../../../features/equipment'
+import { StudentRequestCard, filterRequests, matchesRequestTab, requestTabs, type RequestTab, type RequestDraftData, type StudentRequest } from '../../../features/requests'
 import { Icon } from '../../../shared/ui/Icon'
 import './requests.css'
+import './request-overview.css'
 
-export function RequestsPage({ draft, requests, createdId }: { draft: RequestDraftData; requests: StudentRequest[]; createdId: string | null }) {
-  const created = requests.find((request) => request.id === createdId)
+export function RequestsPage({ draft, requests }: { draft: RequestDraftData; requests: StudentRequest[] }) {
+  const [tab, setTab] = useState<RequestTab>('all')
+  const [query, setQuery] = useState('')
+  const visible = filterRequests(requests, tab, query)
+  const hasDraft = draft.equipmentIds.length > 0
+  function resetFilters() { setTab('all'); setQuery('') }
   return <div className="requests-page">
-    <a className="back-link" href="#/"><Icon name="arrow" />В каталог</a>
-    <div className="request-page-heading"><h1>Мои заявки</h1><p>Комплекты оборудования, даты и решения куратора.</p></div>
-    {created && <div className="request-created" role="status"><Icon name="check" /><div><h2>Заявка № {created.id} отправлена</h2><p>Она на рассмотрении. Оборудование будет забронировано после одобрения куратора.</p></div></div>}
-    <div className="requests-list">
-      {draft.equipmentIds.length > 0 && <article className="request-list-card draft-request-card"><div className="request-panel-heading"><h2>Новая заявка</h2><span className="request-status draft-status">Черновик</span></div><p>{draft.equipmentIds.length} {draft.equipmentIds.length === 1 ? 'предмет' : 'предмета'} в комплекте</p><a href="#/requests/new" className="request-primary">Продолжить оформление<Icon name="arrow" /></a></article>}
-      {requests.map((request) => <article className="request-list-card" key={request.id}><div className="request-panel-heading"><h2>Заявка № {request.id}</h2><span className="request-status">На рассмотрении</span></div><h3>{eventMocks.find((event) => event.id === request.eventId)?.name}</h3><p className="submitted-period"><Icon name="calendar" />{formatPeriod(request.range)}</p><ul className="submitted-equipment">{request.equipmentIds.map((id) => {
-        const equipment = equipmentMocks.find((item) => item.id === id)
-        return equipment && <li key={id}><img src={equipment.image} alt="" width="56" height="44" /><a href={`#/equipment/${id}`}>{equipment.name}</a><span>1 шт.</span></li>
-      })}</ul>{request.location && <p className="submitted-note"><strong>Место использования:</strong> {request.location}</p>}{request.comment && <p className="submitted-note"><strong>Комментарий:</strong> {request.comment}</p>}</article>)}
-    </div>
-    {!draft.equipmentIds.length && !requests.length && <div className="request-empty"><span className="empty-box"><Icon name="box" /></span><h2>Заявок пока нет</h2><p>Выберите технику в каталоге и соберите комплект для своего проекта.</p><a href="#/" className="request-primary">Перейти в каталог<Icon name="arrow" /></a></div>}
+    <div className="requests-overview-heading"><div className="request-page-heading"><h1>Мои заявки</h1><p>Здесь видно, что можно забрать и когда вернуть комплект.</p></div><a className="request-secondary" href="#/"><Icon name="plus" />Выбрать оборудование</a></div>
+    {hasDraft && <aside className="draft-request-card"><span className="draft-preview-icon"><Icon name="box" /></span><div><h2>У вас есть незавершённая заявка</h2><p>{draft.equipmentIds.length} {draft.equipmentIds.length === 1 ? 'предмет' : 'предмета'} в комплекте / {formatPeriod(draft.range)}</p></div><a href="#/requests/new" className="request-primary">Продолжить оформление<Icon name="arrow" /></a></aside>}
+    <div className="request-list-toolbar"><div className="request-status-filters" aria-label="Фильтр по статусу">{requestTabs.map((entry) => <button key={entry.id} type="button" data-filter={entry.id} className={entry.id === tab ? 'is-selected' : ''} aria-pressed={entry.id === tab} onClick={() => setTab(entry.id)}>{entry.label}<span>{requests.filter((request) => matchesRequestTab(request, entry.id)).length}</span></button>)}</div><label className="request-list-search"><Icon name="search" /><span className="sr-only">Поиск по номеру, технике или мероприятию</span><input type="search" value={query} placeholder="Номер, техника или мероприятие" onChange={(event) => setQuery(event.target.value)} /></label></div>
+    <span className="sr-only" role="status">Найдено заявок: {visible.length}</span>
+    <div className="requests-list">{visible.map((request) => <StudentRequestCard key={request.id} request={request} />)}</div>
+    {!visible.length && <div className="request-empty"><span className="empty-box"><Icon name={requests.length ? 'search' : 'box'} /></span><h2>{requests.length ? 'Таких заявок нет' : 'Заявок пока нет'}</h2><p>{requests.length ? 'Попробуйте другой запрос или выберите другой статус.' : 'Выберите технику в каталоге и соберите комплект для своего проекта.'}</p>{requests.length ? <button type="button" className="request-secondary" onClick={resetFilters}>Сбросить фильтры</button> : <a href="#/" className="request-primary">Перейти в каталог<Icon name="arrow" /></a>}</div>}
   </div>
 }

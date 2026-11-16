@@ -10,7 +10,7 @@ export interface RequestDraftData {
 
 export interface StudentRequest extends RequestDraftData {
   id: string
-  status: 'pending'
+  status: 'pending' | 'approved' | 'issued' | 'returned' | 'rejected' | 'cancelled'
 }
 
 export type RequestErrors = Partial<Record<'start' | 'end' | 'eventId' | 'equipment', string>>
