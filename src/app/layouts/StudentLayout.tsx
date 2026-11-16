@@ -2,14 +2,14 @@ import type { ReactNode } from 'react'
 import { Icon } from '../../shared/ui/Icon'
 import { Modal } from '../../shared/ui/Modal'
 
-export function StudentLayout({ children }: { children: ReactNode }) {
+export function StudentLayout({ children, requestsContent, draftCount = 0 }: { children: ReactNode; requestsContent?: ReactNode; draftCount?: number }) {
   return <div className="app-shell">
-    <a className="skip-link" href="#main">Перейти к каталогу</a>
+    <a className="skip-link" href="#main">Перейти к содержимому</a>
     <header className="student-header">
-      <a className="brand" href="/" aria-label="handoff, каталог"><span className="brand-symbol"><Icon name="box" /></span><span>handoff</span></a>
+      <a className="brand" href="#/" aria-label="handoff, каталог"><span className="brand-symbol"><Icon name="box" /></span><span>handoff</span></a>
       <nav className="student-nav" aria-label="Основная навигация">
-        <a href="#main" className="nav-link is-active" aria-current="page">Каталог<svg viewBox="0 0 60 8" fill="none" aria-hidden="true"><path d="M1 5Q8-1 15 5T29 5T43 5T59 5" stroke="currentColor" strokeWidth="1.2" /></svg></a>
-        <Modal title="Мои заявки" trigger="Мои заявки" triggerClassName="nav-link"><div className="mock-empty"><Icon name="box" /><h3>Заявок пока нет</h3><p>Здесь появятся ваши комплекты оборудования и решения куратора.</p></div></Modal>
+        <a href="#/" className="nav-link is-active" aria-current="location">Каталог<svg viewBox="0 0 60 8" fill="none" aria-hidden="true"><path d="M1 5Q8-1 15 5T29 5T43 5T59 5" stroke="currentColor" strokeWidth="1.2" /></svg></a>
+        <Modal title="Мои заявки" trigger={<>Мои заявки{draftCount > 0 && <span className="draft-count">{draftCount}</span>}</>} triggerClassName="nav-link">{requestsContent}</Modal>
         <Modal title="Мероприятия" trigger="Мероприятия" triggerClassName="nav-link"><div className="event-preview"><Icon name="calendar" /><div><span className="muted">18–20 ноября</span><h3>Выставка цифрового искусства</h3><p>Лаборатория цифрового искусства</p></div></div></Modal>
       </nav>
       <div className="header-account">

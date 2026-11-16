@@ -2,7 +2,7 @@
 // Нужен установленный Chrome или Edge. Зависимости не требуются.
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
-import { existsSync, readFileSync, mkdtempSync } from 'node:fs'
+import { existsSync, readFileSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import http from 'node:http'
@@ -85,7 +85,52 @@ try {
   assert.equal(await evaluate('document.querySelector(".equipment-card h3").textContent'), 'Кабель HDMI')
   await click('.clear-button')
   await click('.details-link')
-  assert(await evaluate('Boolean(document.querySelector("dialog[open]"))'))
+  assert(await evaluate('Boolean(document.querySelector(".equipment-page"))'), 'Карточка не открылась')
+  assert.equal(await evaluate('document.querySelector("h1").textContent'), 'Проектор Epson EB-X24')
+  assert.equal(await evaluate('document.querySelectorAll(".calendar-day.is-selected").length'), 3)
+  assert.equal(await evaluate('document.querySelector(".booking-summary dd").textContent'), '18–20 ноября')
+  for (const width of [1440, 1024, 820, 768, 390, 320]) {
+    await send('Emulation.setDeviceMetricsOverride', { width, height: 940, deviceScaleFactor: 1, mobile: false })
+    assert(await evaluate('document.documentElement.scrollWidth <= innerWidth'), `Переполнение карточки при ${width}px`)
+    if (process.argv.includes('--screenshots') && [1440, 390].includes(width)) {
+      const layout = await send('Page.getLayoutMetrics')
+      const screenshot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip: { x: 0, y: 0, width, height: layout.cssContentSize.height, scale: 1 } })
+      writeFileSync(path.join(tmpdir(), `handoff-equipment-${width}.png`), Buffer.from(screenshot.data, 'base64'))
+    }
+  }
+  await click('.add-to-request')
+  assert.equal(await evaluate('document.querySelector(".draft-count").textContent'), '1')
+  assert(await evaluate('document.querySelector(".add-to-request").disabled'))
+  await click('.add-accessory')
+  assert.equal(await evaluate('document.querySelector(".draft-count").textContent'), '2')
+  await click('.student-nav button')
+  assert.equal(await evaluate('document.querySelectorAll(".draft-item").length'), 2)
+  await click('.draft-item .icon-button')
+  assert.equal(await evaluate('document.querySelectorAll(".draft-item").length'), 1)
+  await click('dialog[open] .modal-header .icon-button')
+  await click('[data-date="2026-11-12"]')
+  assert(await evaluate('document.querySelector(".add-to-request").disabled'))
+  await click('[data-date="2026-11-16"]')
+  assert(await evaluate('document.querySelector(".add-to-request").disabled'), 'Нельзя бронировать период с занятыми днями внутри')
+  assert.equal(await evaluate('document.querySelector(".availability-badge").textContent'), 'Занято на эти даты')
+  await click('[data-date="2026-11-18"]')
+  await click('[data-date="2026-11-20"]')
+  assert.equal(await evaluate('document.querySelector(".add-to-request").disabled'), false)
+  await click('[aria-label="Следующие три недели"]')
+  assert.equal(await evaluate('document.querySelector(".calendar-day").dataset.date'), '2026-11-30')
+  await click('[aria-label="Предыдущие три недели"]')
+  assert.equal(await evaluate('document.querySelector(".calendar-day").dataset.date'), '2026-11-09')
+  await click('.back-link')
+  assert.equal(await count(), 4)
+  await send('Page.navigate', { url: `http://127.0.0.1:${address.port}/#/equipment/074` })
+  for (let i = 0; i < 100 && !(await evaluate('Boolean(document.querySelector(".equipment-page"))')); i++) await delay(100)
+  assert(await evaluate('document.querySelector(".add-to-request").disabled'), 'Закрытая техника недоступна')
+  await send('Page.navigate', { url: `http://127.0.0.1:${address.port}/#/equipment/missing` })
+  for (let i = 0; i < 100 && (await evaluate('document.querySelector("h1")?.textContent')) !== 'Оборудование не найдено'; i++) await delay(100)
+  assert.equal(await evaluate('document.querySelector("h1").textContent'), 'Оборудование не найдено')
+  await send('Page.navigate', { url: `http://127.0.0.1:${address.port}/` })
+  for (let i = 0; i < 100 && !(await evaluate('Boolean(document.querySelector(".equipment-card"))')); i++) await delay(100)
+  await click('.notification-button')
   assert(await evaluate('document.querySelector("dialog[open]").contains(document.activeElement)'), 'Фокус вне диалога')
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 })
@@ -98,7 +143,7 @@ try {
   await evaluate('document.activeElement.blur()')
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 })
   assert(await evaluate('document.activeElement !== document.body'), 'Tab не переместил фокус')
-  console.log('PASS: 6 размеров экрана, изображения, поиск, категории, места хранения, сортировка, сброс, диалоги, даты, Escape и Tab')
+  console.log('PASS: каталог и карточка на 6 размерах; фильтры, навигация, календарь, занятые даты, черновик, кабель, удаление, закрытая техника, неизвестный ID, диалоги и клавиатура')
 } finally {
   socket?.close()
   if (process.platform === 'win32') {

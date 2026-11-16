@@ -1,3 +1,6 @@
 export { categories, equipmentMocks, filterEquipment } from './model/equipment'
-export type { Category } from './model/equipment'
+export type { Category, Equipment } from './model/equipment'
 export { EquipmentCard } from './ui/EquipmentCard'
+export { AvailabilityCalendar } from './ui/AvailabilityCalendar'
+export { formatPeriod, isRangeAvailable } from './model/availability'
+export type { DateRange } from './model/availability'
