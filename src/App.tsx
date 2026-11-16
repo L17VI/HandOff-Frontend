@@ -9,6 +9,8 @@ import { RequestsPage } from './pages/student/requests/RequestsPage'
 import { RequestSentPage } from './pages/student/requests/RequestSentPage'
 import { RequestDetailPage } from './pages/student/requests/RequestDetailPage'
 import { ReturnEquipmentPage } from './pages/student/requests/ReturnEquipmentPage'
+import { EventsPage } from './pages/student/events/EventsPage'
+import { eventMocks, type LabEvent } from './features/events'
 
 function App() {
   const [route, setRoute] = useState(() => window.location.hash)
@@ -16,6 +18,8 @@ function App() {
   const routePath = route.split('?')[0]
   const isNewRequest = routePath === '#/requests/new'
   const isRequests = routePath === '#/requests'
+  const isEvents = routePath === '#/events'
+  const catalogEvent = eventMocks.find((event) => event.id === draft.eventId && event.id === new URLSearchParams(route.split('?')[1]).get('event'))
   const sentRequestId = routePath.match(/^#\/requests\/(\d+)\/sent$/)?.[1]
   const requestId = routePath.match(/^#\/requests\/(\d+)$/)?.[1]
   const returnRequestId = routePath.match(/^#\/requests\/(\d+)\/return$/)?.[1]
@@ -31,11 +35,17 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
     document.getElementById('main')?.focus({ preventScroll: true })
-    document.title = `${item ? item.name : isNewRequest ? 'Новая заявка' : returnRequestId ? 'Возврат оборудования' : sentRequestId ? 'Заявка отправлена' : requestId ? `Заявка № ${requestId}` : isRequests ? 'Мои заявки' : 'Каталог оборудования'} | handoff`
-  }, [route, item, isNewRequest, isRequests, sentRequestId, requestId, returnRequestId])
+    document.title = `${item ? item.name : isEvents ? 'Мероприятия' : isNewRequest ? 'Новая заявка' : returnRequestId ? 'Возврат оборудования' : sentRequestId ? 'Заявка отправлена' : requestId ? `Заявка № ${requestId}` : isRequests ? 'Мои заявки' : 'Каталог оборудования'} | handoff`
+  }, [route, item, isNewRequest, isRequests, isEvents, sentRequestId, requestId, returnRequestId])
 
-  let page = <CatalogPage />
-  if (isNewRequest) {
+  function chooseEvent(event: LabEvent) {
+    setDraft((current) => ({ ...current, eventId: event.id, range: { ...event.range }, location: event.venue }))
+  }
+
+  let page = <CatalogPage key={catalogEvent?.id ?? 'catalog'} event={catalogEvent} />
+  if (isEvents) {
+    page = <EventsPage events={eventMocks} onChooseEquipment={chooseEvent} />
+  } else if (isNewRequest) {
     page = <NewRequestPage draft={draft} onChange={setDraft} onRemove={removeEquipment} onSubmit={submitRequest} />
   } else if (isRequests) {
     page = <RequestsPage draft={draft} requests={requests} />
@@ -51,7 +61,7 @@ function App() {
       : <div className="catalog-empty"><h1>Оборудование не найдено</h1><a href="#/">Вернуться в каталог</a></div>
   }
 
-  return <StudentLayout draftCount={draft.equipmentIds.length} activeSection={isNewRequest || isRequests || sentRequestId || requestId || returnRequestId ? 'requests' : 'catalog'}>{page}</StudentLayout>
+  return <StudentLayout draftCount={draft.equipmentIds.length} activeSection={isEvents ? 'events' : isNewRequest || isRequests || sentRequestId || requestId || returnRequestId ? 'requests' : 'catalog'}>{page}</StudentLayout>
 }
 
 export default App

@@ -3,14 +3,15 @@ import { categories, equipmentMocks, filterEquipment, EquipmentCard, type Catego
 import { Icon } from '../../../shared/ui/Icon'
 import { Modal } from '../../../shared/ui/Modal'
 import catalogIllustration from '../../../shared/assets/illustrations/catalog.svg'
+import type { LabEvent } from '../../../features/events'
 
-export function CatalogPage() {
+export function CatalogPage({ event }: { event?: LabEvent }) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<Category>('Все')
   const [sector, setSector] = useState('')
   const [sort, setSort] = useState('available')
-  const [startDate, setStartDate] = useState('2026-11-18')
-  const [endDate, setEndDate] = useState('2026-11-20')
+  const [startDate, setStartDate] = useState(event?.range.start ?? '2026-11-18')
+  const [endDate, setEndDate] = useState(event?.range.end ?? '2026-11-20')
   const items = filterEquipment(equipmentMocks, query, category, sector, sort)
   const formatDate = (date: string) => new Intl.DateTimeFormat('ru', { day: 'numeric', month: 'long' }).format(new Date(`${date}T12:00:00`))
   const dateLabel = startDate && endDate
@@ -33,6 +34,7 @@ export function CatalogPage() {
       <div><h1 id="catalog-title">Каталог оборудования</h1><p>Найдите нужную вещь и проверьте, свободна ли она на ваши даты.</p></div>
       <img className="catalog-illustration" src={catalogIllustration} alt="" width="144" height="120" />
     </section>
+    {event && <aside className="catalog-event-context"><Icon name="calendar" /><div><strong>{event.name}</strong><p>Мероприятие и его даты добавлены в черновик заявки.</p></div><a href="#/events">Выбрать другое событие</a></aside>}
     <section className="catalog-filters" aria-label="Фильтры оборудования">
       <div className="filter-row">
         <label className="search-control"><Icon name="search" /><span className="sr-only">Поиск по названию, разъёму или задаче</span><input type="search" placeholder="Поиск по названию, разъёму или задаче" value={query} onChange={(event) => setQuery(event.target.value)} /></label>
