@@ -1,0 +1,62 @@
+@reference '../../../index.css';
+
+@layer components {
+  .return-equipment-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .return-equipment-form { padding: 24px; }
+  .return-items-help { margin-block-start: 12px; font-size: 14px; line-height: 1.6; color: var(--color-muted); }
+  .return-equipment-list { list-style: none; margin: 24px 0 0; padding: 0; }
+  .return-equipment-list li { display: flex; align-items: center; gap: 16px; padding-block: 24px; border-block-start: 1px solid var(--color-line); }
+  .return-equipment-list img { inline-size: 56px; block-size: 48px; border-radius: 10px; object-fit: cover; flex: none; }
+  .return-item-description { flex: 1; min-inline-size: 0; }
+  .return-item-description h3 { font-size: 18px; font-weight: 650; line-height: 1.5; }
+  .return-item-description p { margin-block-start: 5px; color: var(--color-muted); font-size: 13px; line-height: 1.6; }
+  .return-item-description > span { display: inline-block; color: var(--color-muted); font: 12px/1.5 ui-monospace, monospace; margin-block-start: 5px; }
+  .return-item-checkbox { display: inline-flex; align-items: center; gap: 9px; flex: none; min-block-size: 44px; cursor: pointer; padding-inline: 4px; color: var(--color-muted); font-size: 14px; }
+  .return-item-checkbox input { inline-size: 1.2rem; block-size: 1.2rem; margin: 0; accent-color: var(--color-ink); cursor: pointer; }
+  .is-marked .return-item-checkbox { color: #326447; }
+  .return-issue-field { margin-block-start: 24px; }
+  .return-issue-field textarea { min-block-size: 112px; }
+  .return-form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-block-start: 32px; }
+  .return-form-error { margin-block-start: 16px; }
+  .return-information .approval-notice { margin: 0; padding: 20px; border-radius: 20px; }
+  .return-information h2 { font-size: 17px; font-weight: 650; line-height: 1.5; }
+  .return-information .approval-notice p { font-size: 14px; }
+  .return-place { display: flex; align-items: flex-start; gap: 12px; padding: 24px 8px; }
+  .return-place > .icon { color: var(--color-muted); margin-block-start: 3px; }
+  .return-place h3 { color: var(--color-muted); font-size: 13px; font-weight: 400; }
+  .return-place p { font-size: 15px; font-weight: 550; line-height: 1.6; margin-block-start: 8px; }
+  .return-place span { display: block; font-size: 13px; color: var(--color-muted); margin-block-start: 8px; line-height: 1.6; }
+  .return-report-items { list-style: none; padding: 0; margin: 20px 0 0; }
+  .return-report-items li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; border-block-start: 1px solid var(--color-line); padding-block: 12px; font-size: 14px; line-height: 1.6; }
+  .return-report-items .is-returned { color: #326447; font-size: 12px; }
+  .return-report-items .is-not-returned { color: #9b432c; font-size: 12px; }
+  .return-reported-issue { background: #fbf0dd; border-radius: 14px; padding: 16px; margin-block-start: 12px; }
+  .return-reported-issue h3 { color: #785318; font-weight: 600; font-size: 14px; }
+  .return-reported-issue p { color: #705937; font-size: 14px; line-height: 1.7; margin-block-start: 8px; white-space: pre-wrap; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 1050px) {
+  .return-equipment-layout { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; }
+  .return-equipment-list li { flex-wrap: wrap; }
+  .return-item-checkbox { margin-inline-start: 72px; flex-basis: calc(100% - 72px); }
+}
+@media (max-width: 800px) {
+  .return-equipment-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .return-item-checkbox { margin-inline-start: 0; flex-basis: auto; }
+  .return-information { max-inline-size: none; }
+}
+@media (max-width: 500px) {
+  .return-equipment-page .request-page-heading h1 { font-size: 32px; }
+  .return-equipment-form { padding: 20px 18px 24px; }
+  .return-equipment-form .request-panel-heading { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+  .return-items-help { font-size: 13px; }
+  .return-equipment-list { margin-block-start: 20px; }
+  .return-equipment-list li { gap: 12px; padding-block: 20px; }
+  .return-equipment-list img { inline-size: 44px; block-size: 42px; }
+  .return-item-description h3 { font-size: 16px; }
+  .return-item-description p { font-size: 12px; }
+  .return-item-checkbox { flex-basis: calc(100% - 56px); margin-inline-start: 56px; }
+  .return-form-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-block-start: 24px; }
+  .return-issue-field { margin-block-start: 16px; }
+  .return-information .approval-notice { padding: 18px; }
+}

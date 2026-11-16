@@ -99,6 +99,8 @@
   .skip-link:focus { inset-block-start: 10px; }
   .modal { margin: auto; padding: 28px; inline-size: min(520px, calc(100% - 32px)); max-block-size: calc(100dvh - 48px); overflow: auto; border: 1px solid var(--color-line); border-radius: 26px; background: white; color: var(--color-ink); }
   .modal::backdrop { background: #0007; backdrop-filter: blur(4px); }
+  .modal:modal { overscroll-behavior: contain; }
+  .modal::backdrop { overflow: hidden; overscroll-behavior: contain; }
   .modal-header { @apply flex items-start justify-between; gap: 16px; margin-block-end: 20px; }
   .modal-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -.7px; }
   .icon-button { @apply grid shrink-0 place-items-center border-0; inline-size: 44px; block-size: 44px; background: #f4f4f4; border-radius: 50%; }

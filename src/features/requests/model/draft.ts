@@ -10,8 +10,19 @@ export interface RequestDraftData {
 
 export interface StudentRequest extends RequestDraftData {
   id: string
-  status: 'pending' | 'approved' | 'issued' | 'returned' | 'rejected' | 'cancelled'
+  status: 'pending' | 'approved' | 'issued' | 'return_pending' | 'returned' | 'rejected' | 'cancelled'
+  history: RequestHistoryEntry[]
+  extension?: { requestedEnd: string; reason: string }
+  returnReport?: { returnedEquipmentIds: string[]; issue: string; submittedAt: string }
 }
+
+export interface RequestHistoryEntry {
+  kind: 'submitted' | 'approved' | 'received' | 'return_marked' | 'returned' | 'cancelled' | 'extension_requested'
+  at: string
+  note?: string
+}
+
+export type RequestAction = { type: 'receive' } | { type: 'return'; returnedEquipmentIds: string[]; issue: string } | { type: 'cancel' } | { type: 'extend'; requestedEnd: string; reason: string }
 
 export type RequestErrors = Partial<Record<'start' | 'end' | 'eventId' | 'equipment', string>>
 

@@ -5,3 +5,6 @@ export type { RequestDraftData, StudentRequest, RequestErrors } from './model/dr
 export { StudentRequestCard } from './ui/StudentRequestCard'
 export { requestTabs, matchesRequestTab, filterRequests, requestStatusLabels, formatRequestPeriod } from './model/presentation'
 export type { RequestTab } from './model/presentation'
+export { RequestHistory } from './ui/RequestHistory'
+export { RequestActionDialog } from './ui/RequestActionDialog'
+export type { RequestAction } from './model/draft'

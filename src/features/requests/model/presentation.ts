@@ -5,6 +5,7 @@ import type { StudentRequest } from './draft'
 export const requestStatusLabels: Record<StudentRequest['status'], string> = {
   pending: 'На рассмотрении', approved: 'Можно забирать', issued: 'У вас',
   returned: 'Возвращено', rejected: 'Отклонено', cancelled: 'Отменено',
+  return_pending: 'Возврат на проверке',
 }
 
 export const requestStatusHints: Record<StudentRequest['status'], string> = {
@@ -14,11 +15,13 @@ export const requestStatusHints: Record<StudentRequest['status'], string> = {
   returned: 'Комплект возвращён в лабораторию.',
   rejected: 'Заявка отклонена. Подберите другое оборудование или даты.',
   cancelled: 'Заявка отменена, оборудование не зарезервировано.',
+  return_pending: 'Вы отметили возврат. Сотрудник лаборатории проверит комплект.',
 }
 
 export const requestTabs = [
   { id: 'all', label: 'Все' }, { id: 'pending', label: 'На рассмотрении' },
   { id: 'approved', label: 'К получению' }, { id: 'issued', label: 'У меня' },
+  { id: 'return_pending', label: 'На проверке' },
   { id: 'completed', label: 'Завершённые' },
 ] as const
 export type RequestTab = typeof requestTabs[number]['id']
