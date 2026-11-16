@@ -1,6 +1,9 @@
 import type { Equipment } from './equipment'
 
-export interface DateRange { start: string; end: string }
+export interface DateRange {
+  start: string
+  end: string
+}
 
 // Календарные даты храним без часового пояса. UTC используется только для арифметики дней.
 export function addDays(date: string, days: number) {
@@ -9,15 +12,28 @@ export function addDays(date: string, days: number) {
   return value.toISOString().slice(0, 10)
 }
 
-export function formatDay(date: string, options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' }) {
-  return new Intl.DateTimeFormat('ru', { ...options, timeZone: 'UTC' }).format(new Date(`${date}T12:00:00Z`))
+export function formatDay(
+  date: string,
+  options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' },
+) {
+  return new Intl.DateTimeFormat('ru', { ...options, timeZone: 'UTC' }).format(
+    new Date(`${date}T12:00:00Z`),
+  )
 }
 
 export function formatPeriod({ start, end }: DateRange) {
-  if (!start && !end) return 'Выберите даты'
-  if (!start) return `До ${formatDay(end)}: выберите получение`
-  if (!end) return `${formatDay(start)}: выберите возврат`
-  if (start === end) return formatDay(start)
+  if (!start && !end) {
+    return 'Выберите даты'
+  }
+  if (!start) {
+    return `До ${formatDay(end)}: выберите получение`
+  }
+  if (!end) {
+    return `${formatDay(start)}: выберите возврат`
+  }
+  if (start === end) {
+    return formatDay(start)
+  }
   return start.slice(0, 7) === end.slice(0, 7)
     ? `${Number(start.slice(-2))}–${formatDay(end)}`
     : `${formatDay(start)} – ${formatDay(end)}`
@@ -34,6 +50,8 @@ export function isBusyDate(item: Equipment, date: string) {
 }
 
 export function isRangeAvailable(item: Equipment, range: DateRange) {
-  if (!range.start || !range.end || range.end < range.start || item.status === 'closed') return false
+  if (!range.start || !range.end || range.end < range.start || item.status === 'closed') {
+    return false
+  }
   return !getBookedDates(item).some((date) => date >= range.start && date <= range.end)
 }

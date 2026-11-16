@@ -1,115 +1,531 @@
 @reference '../../index.css';
 
 @layer components {
-  body:has(.profile-page, .notifications-page) { background: white; }
-  .page-heading { padding-block: 56px 40px; }
-  .page-heading h1 { font-size: clamp(2rem, 1rem + 2.4vw, 3.5rem); line-height: 1.15; letter-spacing: -1.5px; font-weight: 750; }
-  .page-heading > p { margin-block-start: 16px; color: var(--color-muted); font-size: 17px; line-height: 1.6; }
-  .account-primary, .account-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-block-size: 48px; border: 1px solid var(--color-line); border-radius: 28px; padding: 12px 20px; background: white; color: var(--color-ink); font-size: 15px; font-weight: 650; line-height: 1.5; text-decoration: none; transition: background 160ms, border-color 160ms; }
-  .account-primary { background: #ffd0f2; border-color: transparent; }
-  .account-primary:hover { background: var(--color-pink); }
-  .account-secondary:hover { background: #f4f4f4; border-color: #b4bab6; }
-  .account-secondary:disabled { opacity: .55; cursor: default; }
-  .account-secondary:disabled:hover { background: white; border-color: var(--color-line); }
-  .notification-button { position: relative; text-decoration: none; }
-  .notification-count { position: absolute; inset-block-start: -7px; inset-inline-end: -7px; display: grid; place-items: center; background: var(--color-pink); color: var(--color-ink); min-inline-size: 20px; block-size: 20px; padding-inline: 4px; border-radius: 12px; border: 2px solid black; font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .account-button { color: white; text-decoration: none; border-radius: 24px; }
-  .account-button:hover .avatar, .account-button[aria-current] .avatar { background: var(--color-pink); }
-  .notification-button[aria-current] { background: var(--color-pink); }
-  .notifications-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-block-end: 24px; }
-  .notification-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-  .notification-filters button { display: flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: var(--color-muted); border: 0; border-radius: 24px; min-block-size: 48px; padding: 10px 16px; font-size: 14px; font-weight: 550; transition: background 160ms, color 160ms; }
-  .notification-filters button:hover { background: #f2f2f2; color: var(--color-ink); }
-  .notification-filters button[aria-pressed=true] { color: white; background: #292929; }
-  .notification-filters button span { font-variant-numeric: tabular-nums; font-size: 12px; opacity: .8; }
-  .mark-all-read { border-color: transparent; font-size: 14px; }
-  .mark-all-read > .icon { inline-size: 18px; }
-  .notifications-panel { background: var(--color-page); border: 1px solid var(--color-line); border-radius: 28px; }
-  .notification-columns, .notification-row { display: grid; grid-template-columns: minmax(0, 1fr) 190px 190px; align-items: center; gap: 24px; padding-inline: 24px; }
-  .notification-columns { padding-block: 16px; border-radius: 27px 27px 0 0; background: #eee6ed; color: #58625b; font-size: 13px; }
-  .notification-list { list-style: none; margin: 0; padding: 0; }
-  .notification-row { padding-block: 28px; border-block-start: 1px solid var(--color-line); }
-  .notification-row:last-child { border-radius: 0 0 27px 27px; }
-  .notification-row.is-unread { background: #fff9fd; }
-  .notification-message { display: flex; align-items: flex-start; gap: 16px; min-inline-size: 0; }
-  .notification-icon { display: grid; place-items: center; flex: none; inline-size: 36px; block-size: 36px; border-radius: 50%; background: #e9edef; color: #47616a; }
-  .notification-icon-approved { background: #e6efe7; color: #42664a; }
-  .notification-icon-returned { background: #eeecef; color: #646068; }
-  .notification-icon > .icon { inline-size: 18px; block-size: 20px; }
-  .notification-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 12px; }
-  .notification-title h2 { font-size: 17px; font-weight: 650; line-height: 1.45; overflow-wrap: anywhere; }
-  .notification-new { color: var(--color-accent); font-size: 11px; font-weight: 600; }
-  .notification-message p { color: var(--color-muted); font-size: 14px; line-height: 1.65; margin-block-start: 6px; overflow-wrap: anywhere; }
-  .notification-row time { color: var(--color-muted); font-size: 14px; line-height: 1.6; font-variant-numeric: tabular-nums; }
-  .notification-link { display: flex; align-items: center; justify-content: flex-end; gap: 12px; color: var(--color-ink); min-block-size: 48px; font-size: 14px; font-weight: 650; text-decoration: none; }
-  .notification-link:hover { color: var(--color-accent); text-decoration: underline; text-underline-offset: 4px; }
-  .notification-link .icon { inline-size: 18px; }
-  .account-empty { display: grid; justify-items: center; gap: 16px; text-align: center; border: 1px dashed var(--color-line); border-radius: 28px; padding: 56px 24px; }
-  .account-empty > .icon { inline-size: 36px; block-size: 40px; color: var(--color-muted); }
-  .account-empty h2 { font-size: 24px; font-weight: 650; }
-  .account-empty p { max-inline-size: 440px; font-size: 15px; color: var(--color-muted); line-height: 1.7; }
-  .profile-panel { max-inline-size: 880px; border: 1px solid var(--color-line); border-radius: 28px; padding: 28px; background: var(--color-page); }
-  .profile-identity { display: flex; align-items: center; gap: 16px; }
-  .profile-avatar { display: grid; place-items: center; flex: none; inline-size: 56px; block-size: 56px; border-radius: 50%; background: #ffd0f2; color: var(--color-ink); font-size: 20px; font-weight: 650; }
-  .profile-identity h2 { font-size: 26px; font-weight: 700; line-height: 1.3; letter-spacing: -.5px; overflow-wrap: anywhere; }
-  .profile-identity p { margin-block-start: 6px; color: var(--color-muted); font-size: 14px; line-height: 1.5; }
-  .profile-details { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px; margin-block: 32px; }
-  .profile-details dt { color: var(--color-muted); font-size: 14px; line-height: 1.5; }
-  .profile-details dd { margin: 8px 0 0; font-size: 18px; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }
-  .profile-account-note { display: flex; align-items: flex-start; gap: 12px; padding-block-start: 24px; border-block-start: 1px solid var(--color-line); color: var(--color-muted); font-size: 15px; line-height: 1.7; }
-  .profile-account-note > .icon { inline-size: 18px; margin-block-start: 2px; }
-  .profile-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-block-start: 32px; }
-  .profile-logout { background: #efefef; border-color: transparent; }
-  .account-dialog-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-block-start: 24px; }
-  .account-help { color: var(--color-muted); font-size: 14px; line-height: 1.65; }
-  .password-form { display: flex; flex-direction: column; gap: 20px; }
-  .password-field { display: flex; flex-direction: column; gap: 8px; }
-  .password-field label { font-size: 15px; font-weight: 650; }
-  .password-field input { inline-size: 100%; min-inline-size: 0; min-block-size: 48px; border: 1px solid #767d77; border-radius: 12px; padding: 12px; background: white; color: var(--color-ink); font-size: 16px; }
-  .password-field input[aria-invalid=true] { border-color: #a12c3b; }
-  .account-error { color: #a12c3b; font-size: 13px; line-height: 1.6; }
-  .password-visibility { min-block-size: 48px; border: 1px solid var(--color-line); border-radius: 12px; background: white; color: var(--color-ink); font-size: 14px; padding: 12px 16px; align-self: flex-start; }
-  .password-visibility[aria-pressed=true] { background: #fff0fa; border-color: var(--color-accent); }
-  .password-notice { color: #345b64; font-size: 14px; line-height: 1.6; }
-  .password-notice:empty { display: none; }
-  .demo-session-ended { inline-size: min(600px, calc(100% - 32px)); margin: 40px auto; }
-  .demo-session-ended .account-empty { margin-block-start: 32px; background: white; border-style: solid; }
-  .demo-session-ended h1 { font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem); line-height: 1.25; font-weight: 700; letter-spacing: -.6px; }
-  .demo-brand { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 28px; font-weight: 750; letter-spacing: -.8px; }
-  .demo-brand > .icon { inline-size: 32px; block-size: 36px; }
+  body:has(.profile-page, .notifications-page) {
+    background: white;
+  }
+  .page-heading {
+    @apply pt-14 pb-10;
+  }
+  .page-heading h1 {
+    font-size: clamp(2rem, 1rem + 2.4vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.09375rem;
+    font-weight: 750;
+  }
+  .page-heading > p {
+    @apply mt-4;
+    color: var(--color-muted);
+    font-size: var(--text-body);
+    line-height: 1.6;
+  }
+  .account-primary,
+  .account-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    @apply min-h-12 gap-2.5;
+    border: 1px solid var(--color-line);
+    @apply rounded-[--spacing(7)] ps-5 pe-5 pt-3 pb-3;
+    background: white;
+    color: var(--color-ink);
+    font-size: var(--text-body-sm);
+    font-weight: 650;
+    line-height: 1.5;
+    text-decoration: none;
+    transition:
+      background 160ms,
+      border-color 160ms;
+  }
+  .account-primary {
+    background: #ffd0f2;
+    border-color: transparent;
+  }
+  .account-primary:hover {
+    background: var(--color-pink);
+  }
+  .account-secondary:hover {
+    background: #f4f4f4;
+    border-color: #b4bab6;
+  }
+  .account-secondary:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .account-secondary:disabled:hover {
+    background: white;
+    border-color: var(--color-line);
+  }
+  .notification-button {
+    position: relative;
+    text-decoration: none;
+  }
+  .notification-count {
+    position: absolute;
+    @apply -end-1.75 -top-1.75;
+    display: grid;
+    place-items: center;
+    background: var(--color-pink);
+    color: var(--color-ink);
+    @apply h-5 min-w-5 rounded-xl px-1;
+    border: 2px solid black;
+    font-size: var(--text-micro);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .account-button {
+    color: white;
+    text-decoration: none;
+    @apply rounded-3xl;
+  }
+  .account-button:hover .avatar,
+  .account-button[aria-current] .avatar {
+    background: var(--color-pink);
+  }
+  .notification-button[aria-current] {
+    background: var(--color-pink);
+  }
+  .notifications-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    @apply mb-6 gap-4;
+  }
+  .notification-filters {
+    display: flex;
+    @apply gap-2;
+    flex-wrap: wrap;
+  }
+  .notification-filters button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @apply gap-2;
+    background: transparent;
+    color: var(--color-muted);
+    border: 0;
+    @apply min-h-12 rounded-3xl ps-4 pe-4 pt-2.5 pb-2.5;
+    font-size: var(--text-sm);
+    font-weight: 550;
+    transition:
+      background 160ms,
+      color 160ms;
+  }
+  .notification-filters button:hover {
+    background: #f2f2f2;
+    color: var(--color-ink);
+  }
+  .notification-filters button[aria-pressed='true'] {
+    color: white;
+    background: #292929;
+  }
+  .notification-filters button span {
+    font-variant-numeric: tabular-nums;
+    font-size: var(--text-xs);
+    opacity: 0.8;
+  }
+  .mark-all-read {
+    border-color: transparent;
+    font-size: var(--text-sm);
+  }
+  .mark-all-read > .icon {
+    @apply w-4.5;
+  }
+  .notifications-panel {
+    background: var(--color-page);
+    border: 1px solid var(--color-line);
+    @apply rounded-[--spacing(7)];
+  }
+  .notification-columns,
+  .notification-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) --spacing(47.5) --spacing(47.5);
+    align-items: center;
+    @apply gap-6 px-6;
+  }
+  .notification-columns {
+    @apply py-4;
+    border-radius: --spacing(6.75) --spacing(6.75) 0 0;
+    background: #eee6ed;
+    color: #58625b;
+    font-size: var(--text-caption);
+  }
+  .notification-list {
+    list-style: none;
+    @apply m-0 p-0;
+  }
+  .notification-row {
+    @apply py-7;
+    border-block-start: 1px solid var(--color-line);
+  }
+  .notification-row:last-child {
+    border-radius: 0 0 --spacing(6.75) --spacing(6.75);
+  }
+  .notification-row.is-unread {
+    background: #fff9fd;
+  }
+  .notification-message {
+    display: flex;
+    align-items: flex-start;
+    @apply min-w-0 gap-4;
+  }
+  .notification-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    @apply h-9 w-9;
+    border-radius: 50%;
+    background: #e9edef;
+    color: #47616a;
+  }
+  .notification-icon-approved {
+    background: #e6efe7;
+    color: #42664a;
+  }
+  .notification-icon-returned {
+    background: #eeecef;
+    color: #646068;
+  }
+  .notification-icon > .icon {
+    @apply h-5 w-4.5;
+  }
+  .notification-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    @apply gap-x-3 gap-y-2;
+  }
+  .notification-title h2 {
+    font-size: var(--text-body);
+    font-weight: 650;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .notification-new {
+    color: var(--color-accent);
+    font-size: var(--text-micro);
+    font-weight: 600;
+  }
+  .notification-message p {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    @apply mt-1.5;
+    overflow-wrap: anywhere;
+  }
+  .notification-row time {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    font-variant-numeric: tabular-nums;
+  }
+  .notification-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    @apply gap-3;
+    color: var(--color-ink);
+    @apply min-h-12;
+    font-size: var(--text-sm);
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .notification-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: --spacing(1);
+  }
+  .notification-link .icon {
+    @apply w-4.5;
+  }
+  .account-empty {
+    display: grid;
+    justify-items: center;
+    @apply gap-4;
+    text-align: center;
+    border: 1px dashed var(--color-line);
+    @apply rounded-[--spacing(7)] ps-6 pe-6 pt-14 pb-14;
+  }
+  .account-empty > .icon {
+    @apply h-10 w-9;
+    color: var(--color-muted);
+  }
+  .account-empty h2 {
+    font-size: var(--text-2xl);
+    font-weight: 650;
+  }
+  .account-empty p {
+    @apply max-w-110;
+    font-size: var(--text-body-sm);
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+  .profile-panel {
+    @apply max-w-220;
+    border: 1px solid var(--color-line);
+    @apply rounded-[--spacing(7)] p-7;
+    background: var(--color-page);
+  }
+  .profile-identity {
+    display: flex;
+    align-items: center;
+    @apply gap-4;
+  }
+  .profile-avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    @apply h-14 w-14;
+    border-radius: 50%;
+    background: #ffd0f2;
+    color: var(--color-ink);
+    font-size: var(--text-xl);
+    font-weight: 650;
+  }
+  .profile-identity h2 {
+    font-size: var(--text-heading);
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.03125rem;
+    overflow-wrap: anywhere;
+  }
+  .profile-identity p {
+    @apply mt-1.5;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+  .profile-details {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    @apply my-8 gap-6;
+  }
+  .profile-details dt {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+  .profile-details dd {
+    @apply ms-0 me-0 mt-2 mb-0;
+    font-size: var(--text-lg);
+    font-weight: 650;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .profile-account-note {
+    display: flex;
+    align-items: flex-start;
+    @apply gap-3 pt-6;
+    border-block-start: 1px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: var(--text-body-sm);
+    line-height: 1.7;
+  }
+  .profile-account-note > .icon {
+    @apply mt-0.5 w-4.5;
+  }
+  .profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    @apply mt-8 gap-4;
+  }
+  .profile-logout {
+    background: #efefef;
+    border-color: transparent;
+  }
+  .account-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    @apply mt-6 gap-3;
+  }
+  .account-help {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+  .password-form {
+    display: flex;
+    flex-direction: column;
+    @apply gap-5;
+  }
+  .password-field {
+    display: flex;
+    flex-direction: column;
+    @apply gap-2;
+  }
+  .password-field label {
+    font-size: var(--text-body-sm);
+    font-weight: 650;
+  }
+  .password-field input {
+    @apply min-h-12 w-full min-w-0;
+    border: 1px solid #767d77;
+    @apply rounded-xl p-3;
+    background: white;
+    color: var(--color-ink);
+    font-size: var(--text-base);
+  }
+  .password-field input[aria-invalid='true'] {
+    border-color: #a12c3b;
+  }
+  .account-error {
+    color: #a12c3b;
+    font-size: var(--text-caption);
+    line-height: 1.6;
+  }
+  .password-visibility {
+    @apply min-h-12;
+    border: 1px solid var(--color-line);
+    @apply rounded-xl;
+    background: white;
+    color: var(--color-ink);
+    @apply ps-4 pe-4 pt-3 pb-3;
+    font-size: var(--text-sm);
+    align-self: flex-start;
+  }
+  .password-visibility[aria-pressed='true'] {
+    background: #fff0fa;
+    border-color: var(--color-accent);
+  }
+  .password-notice {
+    color: #345b64;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+  .password-notice:empty {
+    display: none;
+  }
+  .demo-session-ended {
+    inline-size: min(--spacing(150), calc(100% - --spacing(8)));
+    @apply ms-auto me-auto mt-10 mb-10;
+  }
+  .demo-session-ended .account-empty {
+    @apply mt-8;
+    background: white;
+    border-style: solid;
+  }
+  .demo-session-ended h1 {
+    font-size: clamp(1.75rem, 1rem + 2vw, 2.5rem);
+    line-height: 1.25;
+    font-weight: 700;
+    letter-spacing: -0.0375rem;
+  }
+  .demo-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @apply gap-3;
+    font-size: var(--text-heading-lg);
+    font-weight: 750;
+    letter-spacing: -0.05rem;
+  }
+  .demo-brand > .icon {
+    @apply h-9 w-8;
+  }
 }
 
 @media (max-width: 1100px) {
-  .notification-columns, .notification-row { grid-template-columns: minmax(0, 1fr) 150px 160px; gap: 16px; padding-inline: 20px; }
-  .notification-message { gap: 12px; }
+  .notification-columns,
+  .notification-row {
+    grid-template-columns: minmax(0, 1fr) --spacing(37.5) --spacing(40);
+    @apply gap-4 px-5;
+  }
+  .notification-message {
+    @apply gap-3;
+  }
 }
 @media (max-width: 850px) {
-  .notification-columns { display: none; }
-  .notification-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
-  .notification-row:first-child { border-block-start: 0; border-radius: 27px 27px 0 0; }
-  .notification-message { grid-column: 1 / -1; }
-  .notification-row time { padding-inline-start: 48px; font-size: 13px; }
+  .notification-columns {
+    display: none;
+  }
+  .notification-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    @apply gap-x-4 gap-y-2;
+  }
+  .notification-row:first-child {
+    border-block-start: 0;
+    border-radius: --spacing(6.75) --spacing(6.75) 0 0;
+  }
+  .notification-message {
+    grid-column: 1 / -1;
+  }
+  .notification-row time {
+    @apply ps-12;
+    font-size: var(--text-caption);
+  }
 }
 @media (max-width: 500px) {
-  .page-heading { padding-block: 36px 28px; }
-  .page-heading > p { font-size: 15px; }
-  .notification-filters { gap: 4px; }
-  .notification-filters button { padding-inline: 12px; font-size: 13px; }
-  .notifications-toolbar { gap: 4px; margin-block-end: 20px; }
-  .mark-all-read { padding-inline: 12px; }
-  .notifications-panel { border-radius: 24px; }
-  .notification-row { grid-template-columns: minmax(0, 1fr); padding: 20px 16px; gap: 8px; }
-  .notification-row:first-child { border-radius: 23px 23px 0 0; }
-  .notification-row:last-child { border-radius: 0 0 23px 23px; }
-  .notification-title h2 { font-size: 16px; }
-  .notification-message p { font-size: 13px; }
-  .notification-link { justify-content: flex-start; margin-inline-start: 48px; }
-  .profile-panel { padding: 20px; border-radius: 24px; }
-  .profile-identity { gap: 12px; align-items: flex-start; }
-  .profile-avatar { inline-size: 44px; block-size: 44px; font-size: 16px; }
-  .profile-identity h2 { font-size: 23px; }
-  .profile-identity p { font-size: 13px; }
-  .profile-details { grid-template-columns: minmax(0, 1fr); gap: 24px; margin-block: 28px; }
-  .profile-details dd { font-size: 17px; }
-  .profile-actions { flex-direction: column; align-items: stretch; gap: 12px; margin-block-start: 28px; }
+  .page-heading {
+    @apply pt-9 pb-7;
+  }
+  .page-heading > p {
+    font-size: var(--text-body-sm);
+  }
+  .notification-filters {
+    @apply gap-1;
+  }
+  .notification-filters button {
+    @apply px-3;
+    font-size: var(--text-caption);
+  }
+  .notifications-toolbar {
+    @apply mb-5 gap-1;
+  }
+  .mark-all-read {
+    @apply px-3;
+  }
+  .notifications-panel {
+    @apply rounded-3xl;
+  }
+  .notification-row {
+    grid-template-columns: minmax(0, 1fr);
+    @apply gap-2 ps-4 pe-4 pt-5 pb-5;
+  }
+  .notification-row:first-child {
+    border-radius: --spacing(5.75) --spacing(5.75) 0 0;
+  }
+  .notification-row:last-child {
+    border-radius: 0 0 --spacing(5.75) --spacing(5.75);
+  }
+  .notification-title h2 {
+    font-size: var(--text-base);
+  }
+  .notification-message p {
+    font-size: var(--text-caption);
+  }
+  .notification-link {
+    justify-content: flex-start;
+    @apply ms-12;
+  }
+  .profile-panel {
+    @apply rounded-3xl p-5;
+  }
+  .profile-identity {
+    @apply gap-3;
+    align-items: flex-start;
+  }
+  .profile-avatar {
+    @apply h-11 w-11;
+    font-size: var(--text-base);
+  }
+  .profile-identity h2 {
+    font-size: var(--text-title);
+  }
+  .profile-identity p {
+    font-size: var(--text-caption);
+  }
+  .profile-details {
+    grid-template-columns: minmax(0, 1fr);
+    @apply my-7 gap-6;
+  }
+  .profile-details dd {
+    font-size: var(--text-body);
+  }
+  .profile-actions {
+    flex-direction: column;
+    align-items: stretch;
+    @apply mt-7 gap-3;
+  }
 }
