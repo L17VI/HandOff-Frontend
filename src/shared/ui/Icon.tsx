@@ -1,6 +1,41 @@
 import type { ReactNode } from 'react'
 
 const paths = {
+  user: (
+    <>
+      <circle
+        cx="12"
+        cy="8"
+        r="4"
+      />
+      <path d="M4 23v-2a8 8 0 0 1 16 0v2" />
+    </>
+  ),
+  clipboard: (
+    <>
+      <rect
+        x="5"
+        y="5"
+        width="14"
+        height="19"
+        rx="2"
+      />
+      <rect
+        x="9"
+        y="2"
+        width="6"
+        height="6"
+        rx="1"
+      />
+      <path d="m8 15 3 3 5-6" />
+    </>
+  ),
+  shield: (
+    <>
+      <path d="m12 2 8 3v7c0 6-8 11-8 11S4 18 4 12V5z" />
+      <path d="m8 12 3 3 5-6" />
+    </>
+  ),
   search: (
     <>
       <circle

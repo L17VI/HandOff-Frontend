@@ -19,22 +19,14 @@ import {
 } from './features/notifications'
 import { NotificationsPage } from './pages/student/notifications/NotificationsPage'
 import { ProfilePage } from './pages/profile/ProfilePage'
-import { DemoSessionEndedPage } from './pages/login/DemoSessionEndedPage'
+import { LoginPage } from './pages/login/LoginPage'
+import { useDemoSession } from './features/auth/model/demoSession'
 import './app/styles/account.css'
 
 function App() {
-  const [sessionActive, setSessionActive] = useState(true)
+  const { signedIn, signIn, signOut } = useDemoSession()
 
-  function startDemoSession() {
-    window.location.hash = '/'
-    setSessionActive(true)
-  }
-
-  return sessionActive ? (
-    <StudentApp onLogout={() => setSessionActive(false)} />
-  ) : (
-    <DemoSessionEndedPage onStart={startDemoSession} />
-  )
+  return signedIn ? <StudentApp onLogout={signOut} /> : <LoginPage onSignIn={signIn} />
 }
 
 function StudentApp({ onLogout }: { onLogout: () => void }) {

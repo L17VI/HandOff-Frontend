@@ -117,6 +117,74 @@ try {
   await send('Page.navigate', { url: `http://127.0.0.1:${address.port}` })
   for (
     let i = 0;
+    i < 100 && !(await evaluate('Boolean(document.querySelector(".login-page"))'));
+    i++
+  ) {
+    await delay(100)
+  }
+  assert(
+    await evaluate('Boolean(document.querySelector("input[value=student]:checked"))'),
+    'По умолчанию выбран студент',
+  )
+  assert.equal(
+    await evaluate('document.querySelectorAll("input[type=email], input[type=password]").length'),
+    0,
+    'Для демовхода не нужны реквизиты',
+  )
+  for (const width of [1440, 1024, 820, 768, 390, 320]) {
+    await send('Emulation.setDeviceMetricsOverride', {
+      width,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false,
+    })
+    assert(
+      await evaluate('document.documentElement.scrollWidth <= innerWidth'),
+      `Переполнение входа при ${width}px`,
+    )
+    if (process.argv.includes('--screenshots') && [1440, 390].includes(width)) {
+      const screenshot = await send('Page.captureScreenshot', {
+        format: 'png',
+        captureBeyondViewport: true,
+      })
+      writeFileSync(
+        path.join(tmpdir(), `handoff-login-${width}.png`),
+        Buffer.from(screenshot.data, 'base64'),
+      )
+    }
+  }
+  await evaluate('document.querySelector("input[value=student]").focus()')
+  await send('Input.dispatchKeyEvent', {
+    type: 'keyDown',
+    key: 'ArrowRight',
+    code: 'ArrowRight',
+    windowsVirtualKeyCode: 39,
+  })
+  await send('Input.dispatchKeyEvent', {
+    type: 'keyUp',
+    key: 'ArrowRight',
+    code: 'ArrowRight',
+    windowsVirtualKeyCode: 39,
+  })
+  await delay(80)
+  assert(
+    await evaluate('Boolean(document.querySelector("input[value=curator]:checked"))'),
+    'Роль переключается стрелками',
+  )
+  await click('.login-submit')
+  assert(await evaluate('Boolean(document.querySelector(".login-page"))'), 'Куратор пока не входит')
+  assert(await evaluate('!sessionStorage.getItem("handoff:demo-session")'))
+  await click('input[value=admin]')
+  await click('.login-submit')
+  assert(
+    await evaluate('Boolean(document.querySelector(".login-page"))'),
+    'Администратор пока не входит',
+  )
+  assert(await evaluate('Boolean(document.querySelector("input[value=admin]:checked"))'))
+  await click('input[value=student]')
+  await click('.login-submit')
+  for (
+    let i = 0;
     i < 100 && !(await evaluate('Boolean(document.querySelector(".equipment-card"))'));
     i++
   ) {
@@ -1048,12 +1116,20 @@ try {
   )
   await click('.profile-logout')
   await click('dialog[open] .account-primary')
-  assert(await evaluate('Boolean(document.querySelector(".demo-session-ended"))'))
+  assert(await evaluate('Boolean(document.querySelector(".login-page"))'))
+  assert(
+    await evaluate('Boolean(document.querySelector("input[value=student]:checked"))'),
+    'После выхода снова выбран студент',
+  )
+  assert(
+    await evaluate('!sessionStorage.getItem("handoff:demo-session")'),
+    'Выход очищает демосеанс',
+  )
   assert(
     await evaluate('!document.querySelector(".student-header")'),
     'После выхода рабочие разделы скрыты',
   )
-  await click('.demo-session-ended button')
+  await click('.login-submit')
   assert.equal(await count(), 4)
   assert(
     await evaluate('!document.querySelector(".draft-count")'),
@@ -1129,7 +1205,7 @@ try {
   await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: fallbackScript.identifier })
   assert.deepEqual(runtimeErrors, [], 'Ошибки JavaScript в браузере')
   console.log(
-    'PASS: 11 экранов на 6 размерах; уведомления, прочтение, актуальность напоминаний, профиль, валидация и очистка паролей, выход и сброс демосеанса; каталог, мероприятия и заявки',
+    'PASS: 12 экранов на 6 размерах; вход без реквизитов, переключение ролей, заглушки сотрудников и выход; уведомления, профиль, каталог, мероприятия и заявки',
   )
 } finally {
   socket?.close()

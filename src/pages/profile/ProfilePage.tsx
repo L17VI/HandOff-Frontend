@@ -74,7 +74,8 @@ export function ProfilePage({ user, onLogout }: { user: UserProfile; onLogout: (
             triggerClassName="account-secondary profile-logout"
           >
             <p className="account-help">
-              Демосеанс завершится. Черновик, изменения заявок и отметки о прочтении будут сброшены.
+              Вы вернётесь на экран входа. Черновик, изменения заявок и отметки о прочтении будут
+              сброшены.
             </p>
             <div className="account-dialog-actions">
               <button
