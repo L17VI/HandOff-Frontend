@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { Icon } from '../../shared/ui/Icon'
-import { Modal } from '../../shared/ui/Modal'
+import { userRoleLabels, type UserProfile } from '../../features/users'
 
-export function StudentLayout({ children, activeSection = 'catalog', draftCount = 0 }: { children: ReactNode; activeSection?: 'catalog' | 'requests' | 'events'; draftCount?: number }) {
+export function StudentLayout({ children, user, notificationControl, activeSection = 'catalog', draftCount = 0 }: { children: ReactNode; user: UserProfile; notificationControl: ReactNode; activeSection?: 'catalog' | 'requests' | 'events' | 'profile' | 'notifications'; draftCount?: number }) {
   return <div className="app-shell">
     <a className="skip-link" href="#main">Перейти к содержимому</a>
     <header className="student-header">
@@ -12,8 +12,8 @@ export function StudentLayout({ children, activeSection = 'catalog', draftCount 
         <a href="#/events" className={`nav-link ${activeSection === 'events' ? 'is-active' : ''}`} aria-current={activeSection === 'events' ? 'page' : undefined}>Мероприятия{activeSection === 'events' && <svg viewBox="0 0 60 8" fill="none" aria-hidden="true"><path d="M1 5Q8-1 15 5T29 5T43 5T59 5" stroke="currentColor" strokeWidth="1.2" /></svg>}</a>
       </nav>
       <div className="header-account">
-        <Modal title="Уведомления" trigger={<Icon name="bell" />} triggerClassName="notification-button" triggerLabel="Открыть уведомления"><div className="mock-empty"><Icon name="bell" /><h3>Новых уведомлений нет</h3><p>Решения по заявкам и напоминания о возврате появятся здесь.</p></div></Modal>
-        <Modal title="Профиль студента" trigger={<><span className="account-text"><strong>Анна Соколова</strong><span>Студент</span></span><span className="avatar">АС</span></>} triggerClassName="account-button" triggerLabel="Открыть профиль Анны Соколовой"><div className="profile-preview"><span className="avatar">АС</span><div><h3>Анна Соколова</h3><p>Студент</p></div></div></Modal>
+        {notificationControl}
+        <a href="#/profile" className="account-button" aria-label={`Профиль: ${user.name}`} aria-current={activeSection === 'profile' ? 'page' : undefined}><span className="account-text"><strong>{user.name}</strong><span>{userRoleLabels[user.role]}</span></span><span className="avatar">{user.initials}</span></a>
       </div>
     </header>
     <main id="main" tabIndex={-1}>{children}</main>

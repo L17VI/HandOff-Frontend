@@ -15,6 +15,8 @@ const paths = {
   box: <><path d="m12 8 9-5-9-5-9 5 9 5Z" transform="translate(0 5)" /><path d="m3 8-2 5 9 5 2-5 2 5 9-5-2-5M3 15v5l9 5 9-5v-5M12 18v7" transform="translate(0 -2)" /></>,
   close: <path d="m6 6 12 12M6 18 18 6" />,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M7 2v6m10-6v6M3 11h18" /></>,
+  lock: <><rect x="4" y="11" width="16" height="12" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></>,
+  logout: <><path d="M10 4H4v18h6m5-15 6 6-6 6M9 13h12" /></>,
 } satisfies Record<string, ReactNode>
 
 export type IconName = keyof typeof paths
