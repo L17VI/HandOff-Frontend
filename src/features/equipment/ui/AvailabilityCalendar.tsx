@@ -30,6 +30,6 @@ export function AvailabilityCalendar({ item, range, onChange }: AvailabilityCale
       return <button type="button" key={date} data-date={date} className={`calendar-day ${busy ? 'is-busy' : ''} ${selected ? 'is-selected' : ''}`} aria-pressed={selected} aria-label={`${formatDay(date)}, ${busy ? 'занято' : 'свободно'}${selected ? ', выбрано' : ''}`} onClick={() => selectDate(date)}>{Number(date.slice(-2))}</button>
     })}</div>
     <div className="calendar-legend"><span className="legend-selected">Выбрано</span><span className="legend-busy">Занято</span><span className="legend-free">Свободно</span></div>
-    <p className="sr-only" aria-live="polite">{range.end ? `Выбрано с ${formatDay(range.start)} по ${formatDay(range.end)}` : 'Выберите дату возврата'}</p>
+    <p className="sr-only" aria-live="polite">{!range.start ? 'Выберите дату получения' : range.end ? `Выбрано с ${formatDay(range.start)} по ${formatDay(range.end)}` : 'Выберите дату возврата'}</p>
   </div>
 }

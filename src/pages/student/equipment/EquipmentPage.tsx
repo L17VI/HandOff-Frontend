@@ -1,23 +1,24 @@
 import { useState } from 'react'
 import { equipmentMocks, AvailabilityCalendar, formatPeriod, isRangeAvailable, type Equipment, type DateRange } from '../../../features/equipment'
-import type { DraftItem } from '../../../features/requests'
 import { Icon } from '../../../shared/ui/Icon'
 import './equipment.css'
 
 interface EquipmentPageProps {
   item: Equipment
-  draft: DraftItem[]
-  onAdd: (item: DraftItem) => void
+  draftIds: string[]
+  bookingRange: DateRange
+  onAdd: (equipmentId: string, range: DateRange) => void
 }
 
-export function EquipmentPage({ item, draft, onAdd }: EquipmentPageProps) {
-  const [range, setRange] = useState<DateRange>({ start: '2026-11-18', end: '2026-11-20' })
+export function EquipmentPage({ item, draftIds, bookingRange, onAdd }: EquipmentPageProps) {
+  const [range, setRange] = useState<DateRange>(bookingRange)
   const available = isRangeAvailable(item, range)
   const isProjector = item.category === 'Проекторы'
   const recommended = isProjector ? equipmentMocks.find((equipment) => equipment.id === '028') : undefined
-  const inDraft = (id: string) => draft.some((entry) => entry.equipmentId === id && entry.range.start === range.start && entry.range.end === range.end)
+  const sameRange = bookingRange.start === range.start && bookingRange.end === range.end
+  const inDraft = (id: string) => draftIds.includes(id) && sameRange
   const added = inDraft(item.id)
-  const availabilityLabel = item.status === 'closed' ? 'Закрыто для брони' : !range.end ? 'Выберите дату возврата' : available ? 'Свободно на эти даты' : 'Занято на эти даты'
+  const availabilityLabel = item.status === 'closed' ? 'Закрыто для брони' : !range.start ? 'Выберите дату получения' : !range.end ? 'Выберите дату возврата' : available ? 'Свободно на эти даты' : 'Занято на эти даты'
   const specs = [
     ['Разъёмы', item.description], ['Состояние', 'Рабочее'],
     ['Комплект', isProjector ? 'Проектор' : item.category === 'Мониторы' ? 'Монитор' : 'Кабель'],
@@ -38,9 +39,11 @@ export function EquipmentPage({ item, draft, onAdd }: EquipmentPageProps) {
           <h2 id="availability-title">Доступность</h2>
           <AvailabilityCalendar item={item} range={range} onChange={setRange} />
           <dl className="booking-summary"><div><dt>Период</dt><dd>{formatPeriod(range)}</dd></div><div><dt>В наличии</dt><dd>1 экземпляр</dd></div></dl>
-          <div className="booking-action"><button type="button" className="add-to-request" disabled={!available || added} onClick={() => onAdd({ equipmentId: item.id, range: { ...range } })}><Icon name={added ? 'check' : 'plus'} />{added ? 'Добавлено в заявку' : 'Добавить в заявку'}</button><p>{added ? 'Оборудование в черновике заявки.' : 'Бронь появится после одобрения.'}</p></div>
+          <div className="booking-action"><button type="button" className="add-to-request" disabled={!available || added} onClick={() => onAdd(item.id, { ...range })}><Icon name={added ? 'check' : 'plus'} />{added ? 'Добавлено в заявку' : 'Добавить в заявку'}</button><p>{added ? 'Оборудование в черновике заявки.' : 'Бронь появится после одобрения.'}</p></div>
+          {draftIds.length > 0 && !sameRange && <p className="range-change-notice">При добавлении выбранные даты применятся ко всему комплекту.</p>}
+          {draftIds.length > 0 && <a className="checkout-link" href="#/requests/new">Оформить заявку<Icon name="arrow" /></a>}
         </section>
-        {recommended && <section className="detail-panel recommendation-panel" aria-labelledby="recommendation-title"><h2 id="recommendation-title">К проектору пригодится</h2><div className="recommendation-item"><a href={`#/equipment/${recommended.id}`} aria-label={`Подробнее о ${recommended.name}`}><img src={recommended.image} alt="" width="80" height="64" /></a><div><a className="recommendation-name" href={`#/equipment/${recommended.id}`}>{recommended.name}</a><p>Для подключения ноутбука. Коробка 07.</p></div><button type="button" className="add-accessory" disabled={!available || !isRangeAvailable(recommended, range) || inDraft(recommended.id)} onClick={() => onAdd({ equipmentId: recommended.id, range: { ...range } })}><Icon name={inDraft(recommended.id) ? 'check' : 'plus'} />{inDraft(recommended.id) ? 'Добавлено' : 'Добавить'}</button></div></section>}
+        {recommended && <section className="detail-panel recommendation-panel" aria-labelledby="recommendation-title"><h2 id="recommendation-title">К проектору пригодится</h2><div className="recommendation-item"><a href={`#/equipment/${recommended.id}`} aria-label={`Подробнее о ${recommended.name}`}><img src={recommended.image} alt="" width="80" height="64" /></a><div><a className="recommendation-name" href={`#/equipment/${recommended.id}`}>{recommended.name}</a><p>Для подключения ноутбука. Коробка 07.</p></div><button type="button" className="add-accessory" disabled={!available || !isRangeAvailable(recommended, range) || inDraft(recommended.id)} onClick={() => onAdd(recommended.id, { ...range })}><Icon name={inDraft(recommended.id) ? 'check' : 'plus'} />{inDraft(recommended.id) ? 'Добавлено' : 'Добавить'}</button></div></section>}
       </div>
     </div>
   </div>

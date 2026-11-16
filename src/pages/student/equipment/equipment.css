@@ -68,11 +68,6 @@
   .add-accessory { margin-inline-start: auto; border: 1px solid var(--color-line); background: white; }
   .add-accessory:hover:not(:disabled) { background: #f7eaf3; }
   .draft-count { display: inline-grid; place-items: center; min-inline-size: 20px; block-size: 20px; border-radius: 50%; background: var(--color-pink); color: var(--color-ink); margin-inline-start: 7px; font-size: 12px; }
-  .draft-item { display: flex; align-items: center; gap: 12px; border-block-end: 1px solid var(--color-line); padding-block: 16px; }
-  .draft-item > img { inline-size: 64px; block-size: 52px; object-fit: cover; border-radius: 12px; background: #faeffa; }
-  .draft-item h3 { font-weight: 650; font-size: 15px; }
-  .draft-item p { color: var(--color-muted); font-size: 13px; margin-block-start: 5px; }
-  .draft-item .icon-button { margin-inline-start: auto; }
 }
 
 @media (min-width: 1700px) {
@@ -129,6 +124,4 @@
   .recommendation-name { font-size: 17px; }
   .recommendation-item p { font-size: 12px; }
   .add-accessory { inline-size: 100%; margin-block-start: 5px; }
-  .draft-item { flex-wrap: wrap; }
-  .draft-item > div { flex: 1; }
 }
